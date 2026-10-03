@@ -9,6 +9,27 @@ body {
     flex: 1;
 }
 
+.search-form {
+    width: min(100%, 410px);
+}
+
+.search-inp {
+    min-width: 0;
+}
+
+.search-results-note,
+.empty-search-message {
+    margin: 0.35rem 0 0.75rem;
+    color: #717171;
+}
+
+.search-results-note a {
+    color: #c94343;
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+
 /* Navbar */
 .navbar {
     height: 5rem;
@@ -161,6 +182,23 @@ over ride by default bootstrap styling */
     font-size: 0.88rem;
 }
 
+#filters {
+    margin-bottom: 1rem;
+}
+
+.category-options {
+    padding-bottom: 0.4rem;
+}
+
+.tax-toggle {
+    width: fit-content;
+    margin: 1.5rem 0 0 !important;
+}
+
+.category-browse-note {
+    margin-top: 0.25rem;
+}
+
 .available-stays-heading {
     margin: 1.5rem 0 0;
     font-size: 1.3rem;
@@ -231,6 +269,10 @@ over ride by default bootstrap styling */
         padding-inline: 1rem;
     }
 
+    .search-form {
+        gap: 0.35rem;
+    }
+
     #filters {
         column-gap: 1rem;
         justify-content: flex-start;
@@ -245,7 +287,7 @@ over ride by default bootstrap styling */
     .tax-toggle {
         height: auto;
         min-height: 3.25rem;
-        margin: 1rem 0 0;
+        margin: 1.25rem 0 0 !important;
         padding: 0.6rem 0.8rem;
     }
 

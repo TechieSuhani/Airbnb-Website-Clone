@@ -1,7 +1,7 @@
 <% layout("layouts/boilerplate")%>
 <%
   const categoryGuides = [
-    { id: "trending", label: "Trending", icon: "fa-fire", title: "A little inspiration for your next escape", description: "Sunlit hideaways, memorable views, and stays worth slowing down for. Explore this week’s hand-picked preview.", image: "https://images.unsplash.com/photo-1470770841072-f978cf4d019e?auto=format&fit=crop&w=1000&q=85", alt: "A cozy mountain cabin beside a peaceful lake", features: ["Hand-picked stays", "Memorable views", "Guest favorites"], limit: 6 },
+    { id: "trending", label: "Trending", icon: "fa-fire", title: "A little inspiration for your next escape", description: "Sunlit hideaways, memorable views, and stays worth slowing down for. Explore this week’s hand-picked preview.", image: "https://images.unsplash.com/photo-1470770841072-f978cf4d019e?auto=format&fit=crop&w=1000&q=85", alt: "A cozy mountain cabin beside a peaceful lake", features: ["Hand-picked stays", "Memorable views", "Guest favorites"] },
     { id: "rooms", label: "Rooms", icon: "fa-bed", title: "A room that feels like yours", description: "Find a welcoming room with a comfy bed, a little privacy, and space to recharge after a busy day.", image: "https://images.unsplash.com/photo-1611892440504-42a792e24d32?auto=format&fit=crop&w=1000&q=85", alt: "A bright, comfortable guest room with a neatly made bed", features: ["Comfy beds", "A little privacy", "Easy check-in"] },
     { id: "cities", label: "Iconic Cities", icon: "fa-mountain-city", title: "Stay close to the city buzz", description: "Wake up near famous sights, local cafés, and the streets that make each city special.", image: "https://images.unsplash.com/photo-1519501025264-65ba15a82390?auto=format&fit=crop&w=1000&q=85", alt: "A city skyline glowing at sunset", features: ["Famous sights", "Local food spots", "Easy exploring"] },
     { id: "mountains", label: "Mountains", icon: "fa-mountain", title: "Slow mornings in the mountains", description: "Take in fresh air, big views, and quiet paths far from the rush of everyday life.", image: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=crop&w=1000&q=85", alt: "Tall mountain peaks beneath a clear sky", features: ["Fresh mountain air", "Scenic trails", "Peaceful views"] },
@@ -21,10 +21,16 @@
     flex-wrap: wrap;
     align-items: center;
   }
+  .category-options {
+    display: flex;
+    flex: 1 1 100%;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0 1.5rem;
+  }
   .filter {
     text-align: center;
-    margin-right: 2rem;
-    margin-top: 2rem;
+    margin: 1.5rem 0 0;
     opacity: 0.7;
     color: inherit;
     background: transparent;
@@ -61,9 +67,9 @@
   .tax-toggle {
     border: 1px solid black;
     border-radius: 1rem;
-    height: 3.25rem;
-    padding: 1rem;
-    margin-left: 2rem ;
+    min-height: 3.25rem;
+    padding: 0.75rem 1rem;
+    margin: 1.25rem 0 0;
     display: flex;
     align-items: center;
   }
@@ -71,6 +77,7 @@
 
    
     <div id="filters">
+      <div class="category-options">
        <% for (const category of categoryGuides) { %>
          <button
            class="filter category-filter"
@@ -81,13 +88,13 @@
            data-image="<%= category.image %>"
            data-image-alt="<%= category.alt %>"
            data-features="<%= category.features.join('|') %>"
-           data-limit="<%= category.limit || '' %>"
            aria-pressed="false"
          >
            <span><i class="fa-solid <%= category.icon %>" aria-hidden="true"></i></span>
            <p><%= category.label %></p>
          </button>
        <% } %>
+      </div>
 
        <div class="tax-toggle">
          <div class="form-check-reverse form-switch">
@@ -113,9 +120,18 @@
     loading="lazy"
   >
 </section>
-<p class="category-browse-note" id="category-browse-note" hidden>These are stay ideas, not property filters. Browse all available stays below.</p>
+<p class="category-browse-note" id="category-browse-note" hidden>Explore the same available stays below. Category guides are here for inspiration.</p>
 
 <h2 class="available-stays-heading">Available stays</h2>
+<% if (searchTerm) { %>
+  <p class="search-results-note">
+    <%= allListings.length %> <%= allListings.length === 1 ? "stay" : "stays" %> found for “<%= searchTerm %>”.
+    <a href="/listings">Clear search</a>
+  </p>
+  <% if (!allListings.length) { %>
+    <p class="empty-search-message">No stays matched that search. Try a different place or keyword.</p>
+  <% } %>
+<% } %>
 <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 mt-3" id="listing-grid">
  <% for (let [index, listing] of allListings.entries()) { %>
   <a href="/listings/<%=listing._id %>" class="col listing-link" data-listing-index="<%= index %>">
@@ -173,15 +189,12 @@
         return;
       }
 
-      const { title, description, image, imageAlt, features, limit } = selectedCategory.dataset;
-      const sampleLimit = limit ? Math.min(Number(limit), listingCards.length) : null;
+      const { title, description, image, imageAlt, features } = selectedCategory.dataset;
       categoryTitle.textContent = title;
       categoryDescription.textContent = description;
       categoryImage.src = image;
       categoryImage.alt = imageAlt;
-      categoryNote.textContent = sampleLimit
-        ? `${sampleLimit} sample stays to explore`
-        : "Browse all available stays below";
+      categoryNote.textContent = `${listingCards.length} available stays to explore`;
       categoryFeatures.replaceChildren();
       features.split("|").forEach((feature) => {
         const tag = document.createElement("li");
@@ -189,10 +202,8 @@
         categoryFeatures.append(tag);
       });
       categoryPreview.hidden = false;
-      browseNote.hidden = Boolean(sampleLimit);
-      listingCards.forEach((card, index) => {
-        card.hidden = Boolean(sampleLimit && index >= sampleLimit);
-      });
+      browseNote.hidden = false;
+      listingCards.forEach((card) => { card.hidden = false; });
       categoryPreview.scrollIntoView({ behavior: "smooth", block: "start" });
     });
   });
