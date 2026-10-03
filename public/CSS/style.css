@@ -137,6 +137,37 @@ over ride by default bootstrap styling */
     font-size: 0.85rem;
 }
 
+.category-features {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.55rem;
+    margin: 1rem 0 0;
+    padding: 0;
+    list-style: none;
+}
+
+.category-features li {
+    padding: 0.4rem 0.75rem;
+    color: #fff;
+    background: rgba(255, 255, 255, 0.14);
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    border-radius: 999px;
+    font-size: 0.8rem;
+}
+
+.category-browse-note {
+    margin: -0.5rem 0 1rem;
+    color: #717171;
+    font-size: 0.88rem;
+}
+
+.available-stays-heading {
+    margin: 1.5rem 0 0;
+    font-size: 1.3rem;
+    font-weight: 700;
+    letter-spacing: -0.025em;
+}
+
 .trending-preview > img {
     width: 100%;
     height: 100%;
@@ -208,6 +239,7 @@ over ride by default bootstrap styling */
     .filter {
         min-width: 3.25rem;
         margin: 1rem 0 0;
+        margin-right: 0.75rem;
     }
 
     .tax-toggle {
