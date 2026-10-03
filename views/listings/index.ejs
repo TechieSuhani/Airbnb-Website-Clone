@@ -11,11 +11,26 @@
     margin-right: 2rem;
     margin-top: 2rem;
     opacity: 0.7;
+    color: inherit;
+    background: transparent;
+    border: 0;
+    font: inherit;
   }
 
-  .filter:hover {
+  button.filter:hover {
     opacity: 1;
     cursor: pointer;
+  }
+
+  .filter:focus-visible {
+    outline: 2px solid #fe424d;
+    outline-offset: 5px;
+    border-radius: 0.5rem;
+  }
+
+  .filter.is-active {
+    color: #fe424d;
+    opacity: 1;
   }
 
   .filter p{
@@ -39,10 +54,10 @@
 
    
     <div id="filters">
-       <div class="filter">
+       <button class="filter" id="trending-filter" type="button" aria-pressed="false">
         <div><i class="fa-solid fa-fire"></i></div>
         <P>Trending</P>
-       </div>
+       </button>
         <div class="filter">
         <div><i class="fa-solid fa-bed"></i></div>
         <P>Rooms</P>
@@ -93,11 +108,23 @@
 
        </div>
 
+<section class="trending-preview my-4" id="trending-preview" aria-live="polite" hidden>
+  <div class="trending-preview-copy">
+    <span class="trending-kicker"><i class="fa-solid fa-sparkles"></i> WANDERLUST EDIT</span>
+    <h2>A little inspiration for your next escape</h2>
+    <p>Sunlit hideaways, memorable views, and stays worth slowing down for. Explore this week’s hand-picked preview.</p>
+    <span class="trending-count" id="trending-count"></span>
+  </div>
+  <img
+    src="https://images.unsplash.com/photo-1470770841072-f978cf4d019e?auto=format&fit=crop&w=1000&q=85"
+    alt="A cozy mountain cabin beside a peaceful lake"
+    loading="lazy"
+  >
+</section>
 
-
-<div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 mt-3">
- <% for (let listing of allListings) { %>
-  <a href="/listings/<%=listing._id %>" class="col listing-link">
+<div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 mt-3" id="listing-grid">
+ <% for (let [index, listing] of allListings.entries()) { %>
+  <a href="/listings/<%=listing._id %>" class="col listing-link" data-listing-index="<%= index %>">
   <div class="card listing-card">
     <img src="<%= listing.image.url %>" class="card-img-top" alt="Image for <%= listing.title %>" style="height: 20rem;">
       <div class="card-img-overlay"></div>
@@ -113,17 +140,41 @@
 </div>
 
 <script>
-  let taxSwitch = document.getElementById("flexSwitchCheckDefault");
-  taxSwitch.addEventListener("click", () => {
-    let taxInfo = document.getElementsByClassName("tax-info");
-   for (info of taxInfo) {
-    if (info.style.display != "inline") {
+  const taxSwitch = document.getElementById("flexSwitchCheckDefault");
+  taxSwitch.addEventListener("change", () => {
+    const taxInfo = document.getElementsByClassName("tax-info");
+    for (const info of taxInfo) {
+      if (taxSwitch.checked) {
       info.style.display = "inline";
-    } else {
+      } else {
       info.style.display = "none";
+      }
     }
-   }
+  });
+
+  const trendingFilter = document.getElementById("trending-filter");
+  const trendingPreview = document.getElementById("trending-preview");
+  const trendingCount = document.getElementById("trending-count");
+  const listingCards = [...document.querySelectorAll("[data-listing-index]")];
+  const trendingSampleSize = Math.min(6, listingCards.length);
+  let showingTrending = false;
+
+  trendingCount.textContent = `${trendingSampleSize} stays in this sample`;
+
+  trendingFilter.addEventListener("click", () => {
+    showingTrending = !showingTrending;
+    trendingFilter.classList.toggle("is-active", showingTrending);
+    trendingFilter.setAttribute("aria-pressed", String(showingTrending));
+    trendingPreview.hidden = !showingTrending;
+    trendingFilter.querySelector("p").textContent = showingTrending ? "Show all" : "Trending";
+
+    listingCards.forEach((card, index) => {
+      card.hidden = showingTrending && index >= trendingSampleSize;
+    });
+
+    if (showingTrending) {
+      trendingPreview.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
   });
 </script>
-
 
