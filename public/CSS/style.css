@@ -122,9 +122,62 @@ over ride by default bootstrap styling */
 
 /* Map */
 #map {
-    width: 80vh;
+    width: 100%;
+    max-width: 100%;
     height: 400px;
     border-radius: 1rem;
 }
 
+@media (max-width: 767.98px) {
+    .navbar {
+        height: auto;
+        min-height: 4.5rem;
+    }
 
+    .search-inp {
+        min-width: 0;
+        padding-inline: 1rem;
+    }
+
+    #filters {
+        column-gap: 1rem;
+        justify-content: flex-start;
+    }
+
+    .filter {
+        min-width: 3.25rem;
+        margin: 1rem 0 0;
+    }
+
+    .tax-toggle {
+        height: auto;
+        min-height: 3.25rem;
+        margin: 1rem 0 0;
+        padding: 0.6rem 0.8rem;
+    }
+
+    .listing-card {
+        width: 100%;
+    }
+
+    .show-img {
+        height: auto;
+        max-height: 55vh;
+        aspect-ratio: 4 / 3;
+    }
+
+    .btns {
+        flex-wrap: wrap;
+        gap: 0.75rem;
+    }
+
+    #map {
+        height: 300px;
+    }
+
+    .f-info {
+        height: auto;
+        min-height: 8rem;
+        padding-block: 1rem;
+    }
+}
