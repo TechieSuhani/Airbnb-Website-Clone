@@ -26,6 +26,8 @@ const Listing = require("./models/listing");
 const listingRouter = require("./routes/listing.js");
 const reviewRouter = require("./routes/review.js");
 const userRouter = require("./routes/user.js");
+const listingController = require("./controllers/listing.js");
+const wrapAsync = require("./utils/wrapAsync.js");
 const MongoStore = require("connect-mongo");
 
 
@@ -102,10 +104,7 @@ app.use((req, res, next) => {
 });
 
 
-app.get("/", async (req, res) => {
-  const allListings = await Listing.find({});
-  res.render("listings/index", { allListings });
-});
+app.get("/", wrapAsync(listingController.index));
 
 
 // app.get("/demouser", async(req,res) => {
